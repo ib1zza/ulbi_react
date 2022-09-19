@@ -1,28 +1,32 @@
 import React, { useState } from 'react';
-import Counter from './components/Counter';
-import ClassCounter from './components/ClassCounter';
+import PostList from './components/PostList';
+
+import './css/App.css';
 
 function App() {
-    const [likes, setLikes] = useState(0);
-    const [value, setValue] = useState('string');
+    const [posts, setPosts] = useState([
+        { id: 1, title: "javascript", body: "desctiption", },
+        { id: 2, title: "javascript", body: "desctiption", },
+        { id: 3, title: "javascript", body: "desctiption", },
+        { id: 4, title: "javascript", body: "desctiption", },
+        { id: 5, title: "javascript", body: "desctiption", },
+        { id: 6, title: "javascript", body: "desctiption", },
+    ]);
 
-    function increment() {
-        setLikes(likes + 1);
-    }
-    function decrement() {
-        setLikes(likes - 1);
+    const [posts2, setPosts2] = useState([
+        { id: 1, title: "python", body: "desctiption", },
+        { id: 2, title: "python", body: "desctiption", },
+        { id: 3, title: "python", body: "desctiption", },
+        { id: 4, title: "python", body: "desctiption", },
+        { id: 5, title: "python", body: "desctiption", },
+        { id: 6, title: "python", body: "desctiption", },
+    ]);
 
-    }
+
     return (
         <div className="App">
-            likes = {likes};
-
-            <button onClick={increment}>increment</button>
-            <button onClick={decrement}>decrement</button>
-
-
-            <Counter></Counter>
-            <ClassCounter></ClassCounter>
+            <PostList posts={posts} title={"posts about javasctipt"}></PostList>
+            <PostList posts={posts2} title={"posts about python"}></PostList>
         </div >
     );
 }
