@@ -1,0 +1,2 @@
+
+const [info, setinfo] = useState()
