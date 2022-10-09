@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
 import MySelect from "./UI/select/MySelect";
 import "./css/App.css";
 import MyInput from "./UI/input/MyInput";
+import PostFilter from "./components/PostFilter";
 
 function App() {
   const [posts, setPosts] = useState([
@@ -15,8 +16,26 @@ function App() {
     { id: 6, title: "javascript", body: "desctiption" },
   ]);
 
-  const [selectedSort, setSelectedSort] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [filter, setFilter] = useState({ sort: "", query: "" });
+
+  function getSortedPosts() {}
+
+  const sortedPosts = useMemo(() => {
+    console.log("get sorted postd worked");
+    if (filter.sort) {
+      return [...posts].sort((a, b) =>
+        a[filter.sort].localeCompare(b[filter.sort])
+      );
+    }
+
+    return posts;
+  }, [filter.sort, posts]);
+
+  const sortedAndSearchedPosts = useMemo(() => {
+    return sortedPosts.filter((post) =>
+      post.title.toLowerCase().includes(filter.query.toLowerCase())
+    );
+  }, [filter.query, sortedPosts]);
 
   const createPost = (post) => {
     setPosts([...posts, post]);
@@ -26,41 +45,18 @@ function App() {
     setPosts(posts.filter((p) => p.id !== post.id));
   };
 
-  const sortPosts = (sort) => {
-    setSelectedSort(sort);
-    console.log(sort);
-    setPosts([...posts].sort((a, b) => a[sort].localeCompare(b[sort])));
-  };
-
   return (
     <div className="App">
       <PostForm create={createPost} />
       <div>
         <hr style={{ margin: "15px 0px" }} />
-        <MyInput
-          placeholder={"Search"}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <MySelect
-          value={selectedSort}
-          onChange={sortPosts}
-          defaultValue={"Сортировка"}
-          options={[
-            { value: "title", name: "по названию" },
-            { value: "body", name: "по описанию" },
-          ]}
-        ></MySelect>
       </div>
-      {posts.length ? (
-        <PostList
-          remove={removePost}
-          posts={posts}
-          title={"posts about javasctipt"}
-        ></PostList>
-      ) : (
-        <div>NO post found</div>
-      )}
+      <PostFilter filter={filter} setFilter={setFilter} />
+      <PostList
+        remove={removePost}
+        posts={sortedAndSearchedPosts}
+        title={"posts about javasctipt"}
+      ></PostList>
     </div>
   );
 }
